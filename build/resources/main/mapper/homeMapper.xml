@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guguin.mapper.HomeMapper">
+
+    <select id="getRecList">
+        SELECT RECNUM, RECRUIT.COMID, COMNAME, RECTITLE
+        FROM RECRUIT INNER
+                         JOIN BUSINESS_MEMBERS ON RECRUIT.COMID = BUSINESS_MEMBERS.COMID
+    </select>
+    <select id="getUserById">
+        SELECT USERID, USERNAME
+        FROM PERSONAL_MEMBERS
+        WHERE USERID = 'user001'
+    </select>
+
+</mapper>

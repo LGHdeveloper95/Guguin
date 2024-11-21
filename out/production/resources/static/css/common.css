@@ -1,0 +1,94 @@
+@charset "UTF-8";
+
+*{
+	padding : 0;
+	margin : 0;
+	box-sizing: border-box;
+}
+a{ text-decoration: none; }
+
+#menus a:hover{ text-decoration: none; }
+/*head-------------------------*/
+#banner{
+	width: 20%;
+    height: auto;
+    margin-top: 20px;
+}
+header{ text-align: center; }
+#session-timer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 0 30px 15px;
+}
+#loginTenstioin {
+    background: none;
+    color: black;
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 10px 12px;
+    font-size: 16px;
+    cursor: pointer;
+}
+#loginTenstioin:hover{
+	background-color: black;
+	color: white;
+	transition: background-color 0.3s, color 0.3s, transform 0.2s;
+}
+#menus {
+	display: flex;
+	justify-content: space-between;
+	background: linear-gradient(to bottom, #575757, #000000); /* 위에서 아래로 색상 그라데이션 */
+	padding: 15px 30px;
+}
+#menus div {
+	flex: 1;
+	text-align: center;
+}
+#menus a {
+    color: white;
+    font-weight: 600;
+    position: relative;
+}
+#menus a:hover{ text-decoration: none; }
+#menus a::after {
+    content: "";
+    display: block;
+    height: 2px;
+    background: white;
+    transition: width 0.3s ease, opacity 0.3s ease;
+    width: 0;
+    opacity: 0;
+    position: absolute;
+    left: 50%;
+    bottom: -5px;
+    transform: translateX(-50%);
+}
+#menus a:hover::after {
+    width: 100%;
+    opacity: 1;
+}
+/*profile-------------------------------------------*/
+.profile {
+  /* width: 20%;
+  height: 40%;
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  
+  padding: 40px 10px; */
+}
+.profile>div{ text-align: center; }
+.profile img {
+  width: 30%; /* 프로필 이미지 너비를 80px로 설정 */
+  height: auto; /* 비율 유지 */
+  /* filter: grayscale(100%) brightness(0.5); */ /* 회색조 + 어둡게 필터 적용 */
+}
+.abutton{
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 2px;
+  background-color: #f2f2f2;
+}

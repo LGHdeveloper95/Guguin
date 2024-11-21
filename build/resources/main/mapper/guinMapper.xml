@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guguin.guin.mapper.GuinMapper">
+
+    <select id = "getRecruitList">
+        SELECT BM.COMNAME AS COMNAME
+             ,RECNUM
+             ,REC.COMID  AS COMID
+             ,RECTITLE
+             ,SUBTITLE
+             ,REC.BOSS  AS BOSS
+             ,GCONTENT
+             ,REG_DATE
+             ,DEADLINE
+             ,SIDO_CODE
+             ,GUGUN_CODE
+             ,CAREER_CODE
+             ,EDU_CODE
+             ,BOOK_COUNT
+        FROM RECRUIT REC LEFT JOIN BUSINESS_MEMBERS BM
+         ON BM.COMID = REC.COMID
+    </select>
+    <select id="getRecruit">
+        SELECT BM.COMNAME AS COMNAME
+             ,RECNUM
+             ,REC.COMID  AS COMID
+             ,RECTITLE
+             ,SUBTITLE
+             ,REC.BOSS  AS BOSS
+             ,GCONTENT
+             ,REG_DATE
+             ,DEADLINE
+             ,SIDO_CODE
+             ,GUGUN_CODE
+             ,CAREER_CODE
+             ,EDU_CODE
+             ,BOOK_COUNT
+        FROM RECRUIT REC LEFT JOIN BUSINESS_MEMBERS BM
+        ON BM.COMID = REC.COMID
+        WHERE  REC.RECNUM = #{recnum}
+    </select>
+</mapper>
