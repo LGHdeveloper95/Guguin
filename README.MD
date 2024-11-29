@@ -1,3 +1,0 @@
-KWANG COMMIT
-HELLO WORLD
-노트북 접속 및 커밋 확인
