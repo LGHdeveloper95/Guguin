@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guguin.user.mapper.UserMypageMapper">
+  <select id="getResumeList">
+    SELECT *
+     FROM PERSONAL_RESUME
+     WHERE USERID = #{ userid }
+  </select>
+  
+  <select id="getList">
+    SELECT
+    <choose>
+        <when test="menu.equals('apply')">
+          RESTITLE, SENDNUM, PASS_CODE, COMID, COMNAME
+           FROM APPLIED_RESUME JOIN BUSINESS_MEMBERS
+           USING(COMID)
+        </when>
+        <when test="menu.equals('scrap')">
+          RECRUIT.RECNUM, RECTITLE, TO_CHAR(DEADLINE,'YYYY-DD-MM') DEADLINE, VIEWS
+           FROM SCRAP JOIN RECRUIT
+           USING(COMID)
+        </when>
+        <otherwise>
+          COMID, COMNAME, RECNUM, RECTITLE, VIEWS
+           FROM BOOKMARK JOIN RECRUIT
+           USING(COMID)
+        </otherwise>
+    </choose>
+    WHERE USERID = #{ userid }
+    <if test="menu.equals('apply')">
+      AND PASS_CODE = 1
+    </if>
+  </select>
+  
+  <select id="getResume">
+    SELECT *
+     FROM PERSONAL_RESUME
+     WHERE RESNUM = #{ resnum }
+  </select>
+  
+  <select id="getResumeEduList">
+    SELECT EDU_NAME
+     FROM PERSONAL_RESUME JOIN EDU_LIST
+      USING(EDU_CODE)
+     WHERE RESNUM = #{ resnum }
+  </select>
+  
+  <select id="getResumeCarrer">
+    SELECT CAREER_NAME
+     FROM PERSONAL_RESUME JOIN CAREER
+      USING(CAREER_CODE)
+     WHERE RESNUM = #{ resnum }
+  </select>
+  
+  <select id="getResumeSkills">
+    SELECT SKILL
+     FROM SKILL_LIST
+     WHERE SKILL_CODE = #{ skill_code }
+  </select>
+  
+  <select id="getUser">
+    SELECT USERID, USERNAME, GENDER, TO_CHAR(BIRTH,'YYYY-MM-DD') AS BIRTH, UPHONE, UADDR, EMAIL, POST_CODE, UADDR2
+     FROM PERSONAL_MEMBERS
+     WHERE USERID = #{ userid }
+  </select>
+  
+  <select id="getEduList">
+    SELECT *
+     FROM EDU_LIST
+  </select>
+  <select id="getCareerList">
+    SELECT *
+     FROM CAREER
+  </select>
+  <select id="getSkillCateList">
+    SELECT *
+     FROM SKILL_CATEGORY_LIST
+  </select>
+  <select id="getSidoList">
+    SELECT *
+     FROM SIDO_LIST
+  </select>
+
+  <select id="getSkillListByCateCode">
+    SELECT *
+     FROM SKILL_LIST
+     WHERE SCATE_CODE = #{ scate_code }
+  </select>
+  <select id="getSkillListBySidoCode">
+    SELECT *
+     FROM GUGUN_LIST
+     WHERE SIDO_CODE = #{ sido_code }
+  </select>
+  
+  <!-- backup -->
+  <insert id="backupResume">
+        INSERT INTO RESUME_BACKUP( RES_BACKNUM
+                                 , RESTITLE
+                                 , USERID
+                                 , USERNAME
+                                 , REG_DATE
+                                 , PICTURE
+                                 , EDU_CODE
+                                 , EDU_CONTENT
+                                 , LICENSE
+                                 , CAREER_CODE
+                                 , CAREER_CONTENT
+                                 , BACKGROUND
+                                 , MOTIVATION
+                                 , PERSONALITY
+                                 , GUGUN_CODE
+                                 , GENDER
+                                 , SKILLS)
+        VALUES (null, #{restitle,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, SYSDATE ,#{picture,jdbcType=VARCHAR},
+                #{edu_code,jdbcType=INTEGER}, #{edu_content,jdbcType=VARCHAR}, #{license,jdbcType=VARCHAR},
+                #{career_code,jdbcType=INTEGER},
+                #{career_content,jdbcType=VARCHAR}, #{background,jdbcType=VARCHAR}, #{motivation,jdbcType=VARCHAR},
+                #{personality,jdbcType=VARCHAR}, #{gugun_code,jdbcType=INTEGER},#{gender,jdbcType=VARCHAR}, #{skills,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="getBackupResumeList">
+        SELECT *
+        FROM RESUME_BACKUP
+        WHERE USERID = #{userid}
+        ORDER BY REG_DATE DESC
+    </select>
+
+    <select id="getBackupResume">
+        SELECT *
+        FROM RESUME_BACKUP
+        WHERE RES_BACKNUM = #{res_backnum}
+    </select>
+
+    <delete id="deleteBackup">
+        DELETE
+        FROM RESUME_BACKUP
+        WHERE RES_BACKNUM =
+              (SELECT RES_BACKNUM FROM RESUME_BACKUP ORDER BY REG_DATE ASC OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY)
+    </delete>
+  <!-- backup end -->
+  
+  <insert id="insertResume">
+    INSERT INTO PERSONAL_RESUME
+     (RESTITLE, USERID, USERNAME, EDU_CODE, CAREER_CODE, BACKGROUND
+     , MOTIVATION, PERSONALITY, GUGUN_CODE, GENDER
+     <if test="picture != null and picture != ''">
+        , PICTURE
+     </if>
+     <if test="edu_content != null and edu_content != ''">
+        , EDU_CONTENT
+     </if>
+     <if test="career_content != null and career_content != ''">
+        , CAREER_CONTENT
+     </if>
+     <if test="skills != null and skills != ''">
+        , SKILLS
+     </if>
+     <if test="license != null and license != ''">
+        , LICENSE
+     </if>
+     )
+     VALUES(
+       #{ restitle }, #{ userid }, #{ username }, #{  edu_code }, #{ career_code }
+      , #{ background }, #{ motivation }, #{ personality }, #{ gugun_code }, #{ gender }
+      <if test="picture != null and picture != ''">
+        , #{ picture }
+     </if>
+     <if test="edu_content != null and edu_content != ''">
+        , #{ edu_content }
+      </if>
+     <if test="career_content != null and career_content != ''">
+        , #{ career_content }
+     </if>
+     <if test="skills != null and skills != ''">
+        , #{ skills }
+     </if>
+     <if test="license != null and license != ''">
+        , #{ license }
+     </if>
+     )
+  </insert>
+  
+  <select id="getApplyList">
+    SELECT RESTITLE, SENDNUM, RECTITLE, BUSINESS_MEMBERS.COMNAME, BUSINESS_MEMBERS.COMID, APPLIED_RESUME.REG_DATE, PASS_CODE, RECRUIT.RECNUM
+      FROM APPLIED_RESUME LEFT JOIN BUSINESS_MEMBERS ON APPLIED_RESUME.COMID = BUSINESS_MEMBERS.COMID
+                          LEFT JOIN RECRUIT ON APPLIED_RESUME.RECNUM = RECRUIT.RECNUM
+      WHERE USERID = #{ userid }
+  </select>
+  
+  <select id="getApplyListFilter">
+    SELECT RESTITLE, SENDNUM, RECTITLE, BUSINESS_MEMBERS.COMNAME, BUSINESS_MEMBERS.COMID, APPLIED_RESUME.REG_DATE, PASS_CODE, APPLIED_RESUME.RECNUM
+      FROM APPLIED_RESUME LEFT JOIN BUSINESS_MEMBERS ON APPLIED_RESUME.COMID = BUSINESS_MEMBERS.COMID
+                          LEFT JOIN RECRUIT ON APPLIED_RESUME.RECNUM = RECRUIT.RECNUM
+      WHERE USERID = #{ userid }
+      <choose>
+        <when test="pass_code == 0">
+          AND PASS_CODE IS NULL
+        </when>
+        <when test="pass_code == 1">
+          AND PASS_CODE = 1
+        </when>
+        <when test="pass_code == 2">
+          AND PASS_CODE = 2
+        </when>
+        <when test="pass_code == 3">
+        </when>
+      </choose>
+  </select>
+  
+  <select id="getResumeApply">
+    SELECT *
+     FROM PERSONAL_RESUME
+     WHERE RESNUM = #{ resnum }
+  </select>
+  
+  <!-- 유저정보 수정 ======================================== -->
+  <update id="updateUser">
+    UPDATE PERSONAL_MEMBERS
+     SET USERNAME = #{username}, UPHONE = #{uphone}, UADDR = #{uaddr}, EMAIL = #{email},
+         POST_CODE = #{ post_code }, UADDR2 = #{ uaddr2 }
+     WHERE USERID = #{userid}
+  </update>
+  
+  <select id="getUserPw">
+    SELECT USERPW
+     FROM PERSONAL_MEMBERS
+     WHERE userid = #{userid}
+  </select>
+  
+  <update id="updateUserPw">
+    UPDATE PERSONAL_MEMBERS
+     SET USERPW = #{ userpw }
+     WHERE USERID = #{ userid }
+  </update>
+  
+  <!-- 이력서 지원 ======================================== -->
+  <insert id="insertApplyResume">
+  INSERT INTO APPLIED_RESUME (
+    RESTITLE, USERID, USERNAME
+    <if test="picture != null">
+      , PICTURE
+    </if>
+    , EDU_CODE
+    <if test="edu_content != null">
+      , EDU_CONTENT
+    </if>
+    <if test="license != null">
+      , LICENSE
+    </if>
+    , CAREER_CODE
+    <if test="career_content != null">
+      , CAREER_CONTENT
+    </if>
+    , GUGUN_CODE
+    , BACKGROUND
+    , MOTIVATION
+    , PERSONALITY
+    , COMID
+    , RECNUM
+    <if test="skills != null">
+    , SKILLS
+    </if>
+    )
+    VALUES (
+    #{ restitle }, #{ userid }, #{ username }
+    <if test="picture != null">
+      , #{ picture }
+    </if>
+    , #{ edu_code }
+    <if test="edu_content != null">
+      , #{ edu_content }
+    </if>
+    <if test="license != null">
+       ,#{ license }
+    </if>
+    , #{ career_code }
+    <if test="career_content != null">
+      , #{ career_content }
+    </if>
+    , #{ gugun_code }, #{ background }, #{ motivation }, #{ personality }, #{ comid }, #{ recnum }
+    <if test="skills != null">
+      , #{ skills }
+    </if>
+    )
+    <selectKey resultType="java.lang.String" keyProperty="sendnum" order="AFTER">
+        SELECT TO_CHAR('SD' || LPAD(SENDNUM_SEQ.CURRVAL, 20, '0')) FROM DUAL  <!-- 예: SEQUENCE에서 값 가져오기 -->
+    </selectKey>
+  </insert>
+  
+  <select id="getApplyCnt">
+    SELECT COUNT(*)
+    FROM APPLIED_RESUME
+    WHERE USERID = #{param1} AND RECNUM = #{param2}
+  </select>
+  
+  <select id="getApplyResume">
+    SELECT *
+     FROM APPLIED_RESUME
+     WHERE SENDNUM = #{sendnum}
+  </select>
+  
+  <select id="getApplyResumeEduList">
+    SELECT EDU_NAME
+     FROM APPLIED_RESUME JOIN EDU_LIST
+      USING(EDU_CODE)
+     WHERE sendnum = #{ sendnum }
+  </select>
+  
+  <select id="getApplyResumeCarrer">
+    SELECT CAREER_NAME
+     FROM APPLIED_RESUME JOIN CAREER
+      USING(CAREER_CODE)
+     WHERE sendnum = #{ sendnum }
+  </select>
+  
+  <insert id="insertFileUrl">
+    INSERT INTO DATA_STORAGE(STORAGE_USER, URL)
+     VALUES (#{param1}, (SELECT URL FROM DATA_STORAGE WHERE STORAGE_USER = #{param2}))
+  </insert>
+  
+  <delete id="delResume">
+    DELETE
+     FROM PERSONAL_RESUME
+     WHERE RESNUM = #{resnum} 
+  </delete>
+  
+  <!-- scrap=======================================-->
+  <select id="getScrapList">
+   SELECT SCNUM, RECRUIT.COMID, RECRUIT.RECNUM, RECTITLE, COMNAME, TO_CHAR(DEADLINE ,'yyyy-mm-dd') DEADLINE, VIEWS
+   FROM SCRAP JOIN RECRUIT ON SCRAP.RECNUM = RECRUIT.RECNUM
+   WHERE SCRAP.USERID = #{ userid }
+  </select>
+  <select id="getBookmarkList">
+    SELECT BMNUM, BUSINESS_MEMBERS.COMID, COMNAME, ROUND(AVG((WELFARE_VAL + BALANCE_VAL + CULTURE_VAL + PROMOTION_VAL + MANAGER_VAL) / 5),2) AVERAGE_VAL
+  FROM BOOKMARK JOIN BUSINESS_MEMBERS ON BOOKMARK.COMID = BUSINESS_MEMBERS.COMID
+                JOIN STARPOINT ON BUSINESS_MEMBERS.COMID = STARPOINT.COMID
+  WHERE BOOKMARK.USERID = #{ userid }
+  GROUP BY BMNUM, BUSINESS_MEMBERS.COMID, COMNAME
+  </select>
+  <select id="getReviewList">
+    SELECT BUSINESS_MEMBERS.COMID, COMNAME, ROUND(AVG((WELFARE_VAL + BALANCE_VAL + CULTURE_VAL + PROMOTION_VAL + MANAGER_VAL) / 5),2) AVERAGE_VAL,COMMENTED
+    FROM STARPOINT JOIN BUSINESS_MEMBERS ON STARPOINT.COMID = BUSINESS_MEMBERS.COMID
+    WHERE USERID = #{ userid }
+    GROUP BY BUSINESS_MEMBERS.COMID, COMNAME, COMMENTED
+  </select>
+  <select id="getCommList">
+    SELECT *
+ FROM COMMUNITY
+ WHERE USERID = #{ userid }
+  </select>
+</mapper>

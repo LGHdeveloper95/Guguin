@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.guguin.search.SearchMapper">
+
+    <!-- 커뮤니티 게시글 총 개수 -->
+    <select id="countCommunityPosts" parameterType="string">
+        SELECT COUNT(*)
+        FROM COMMUNITY
+        WHERE LOWER(NOT_TITLE) LIKE '%' || LOWER(#{keyword}) || '%'
+           OR LOWER(NOT_CONTENT) LIKE '%' || LOWER(#{keyword}) || '%'
+    </select>
+
+    <!-- 커뮤니티 게시글 검색 (페이징 적용) -->
+    <select id="searchCommunityPosts" parameterType="map">
+        SELECT 
+            CONUM AS conum,
+            NOT_TITLE AS notTitle,
+            NOT_CONTENT AS notContent,
+            USERID AS userid,
+            VIEWS AS views
+        FROM COMMUNITY
+        WHERE LOWER(NOT_TITLE) LIKE '%' || LOWER(#{keyword}) || '%'
+           OR LOWER(NOT_CONTENT) LIKE '%' || LOWER(#{keyword}) || '%'
+        ORDER BY VIEWS DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+    </select>
+
+    <!-- 채용 공고 총 개수 -->
+    <select id="countRecruitPosts" parameterType="string">
+        SELECT COUNT(*)
+        FROM RECRUIT
+        WHERE LOWER(RECTITLE) LIKE '%' || LOWER(#{keyword}) || '%'
+           OR LOWER(SUBTITLE) LIKE '%' || LOWER(#{keyword}) || '%'
+    </select>
+
+    <!-- 채용 공고 검색 (페이징 적용) -->
+    <select id="searchRecruitPosts" parameterType="map">
+        SELECT 
+            RECNUM AS recnum,
+            RECTITLE AS rectitle,
+            SUBTITLE AS subtitle,
+            COMNAME AS comname,
+            VIEWS AS views,
+            PICTURE
+        FROM RECRUIT
+        WHERE LOWER(RECTITLE) LIKE '%' || LOWER(#{keyword}) || '%'
+           OR LOWER(SUBTITLE) LIKE '%' || LOWER(#{keyword}) || '%'
+        ORDER BY VIEWS DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+    </select>
+
+</mapper>

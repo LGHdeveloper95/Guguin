@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guguin.calendar.CalendarMapper">
+    <!-- 특정 기간 내의 공고 정보를 가져오는 쿼리 -->
+    <select id="getRecruitmentsInDateRange" parameterType="map">
+            SELECT 
+        RECNUM AS recnum, 
+        RECTITLE AS rectitle, 
+        COMNAME AS comname, 
+        TO_CHAR(START_DATE, 'YYYY-MM-DD') AS startDate, 
+        TO_CHAR(DEADLINE, 'YYYY-MM-DD') AS deadline, 
+        VIEWS AS views
+    FROM RECRUIT
+    WHERE (START_DATE BETWEEN #{startDate} AND #{endDate})
+       OR (DEADLINE BETWEEN #{startDate} AND #{endDate})
+    </select>
+</mapper>

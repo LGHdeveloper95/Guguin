@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guguin.com.post.mapper.PostMapper">
+
+    <select id="getPostList">
+        SELECT *
+        FROM RECRUIT
+    </select>
+
+    <select id="getPost">
+        SELECT *
+        FROM RECRUIT
+        WHERE RECNUM=#{recnum}
+    </select>
+    <select id="getPostListByComid">
+        SELECT *
+        FROM RECRUIT
+        WHERE COMID=#{comid}
+    </select>
+
+    <select id="getCount">
+        SELECT COUNT(*)
+        FROM RECRUIT
+    </select>
+
+    <insert id="backupPost">
+        INSERT INTO RECRUIT_BACKUP(REC_BACKNUM, COMID,
+                                   RECTITLE,
+                                   SUBTITLE,
+                                   BOSS,
+                                   GCONTENT,
+                                   REG_DATE,
+                                   START_DATE,
+                                   DEADLINE,
+                                   CAREER_CODE,
+                                   EDU_CODE,
+                                   BOOK_COUNT,
+                                   PICTURE,
+                                   LICENSE,
+                                   GUGUN_CODE,SKILLS)
+        VALUES (null, #{comid}, #{rectitle,jdbcType=VARCHAR}, #{subtitle,jdbcType=VARCHAR}, #{boss,jdbcType=VARCHAR},
+                #{gcontent,jdbcType=VARCHAR}, SYSDATE, #{start_date,jdbcType=DATE}, #{deadline,jdbcType=DATE},
+                #{career_code,jdbcType=INTEGER},
+                #{edu_code,jdbcType=INTEGER}, #{book_count,jdbcType=INTEGER}, #{picture,jdbcType=VARCHAR},
+                #{license,jdbcType=VARCHAR}, #{gugun_code,jdbcType=INTEGER},#{skills,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="getBackupPostList">
+        SELECT *
+        FROM RECRUIT_BACKUP
+        WHERE COMID = #{comid}
+        ORDER BY REG_DATE DESC
+    </select>
+
+    <select id="getBackupPost">
+        SELECT *
+        FROM RECRUIT_BACKUP
+        WHERE REC_BACKNUM = #{rec_backnum}
+    </select>
+
+    <delete id="deleteBackup">
+        DELETE
+        FROM RECRUIT_BACKUP
+        WHERE REC_BACKNUM =
+              (SELECT REC_BACKNUM FROM RECRUIT_BACKUP ORDER BY REG_DATE ASC OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY)
+    </delete>
+
+    <insert id="savePost">
+        INSERT INTO RECRUIT(COMID,
+                                   RECTITLE,
+                                   SUBTITLE,
+                                   BOSS,
+                                   GCONTENT,
+                                   REG_DATE,
+                                   START_DATE,
+                                   DEADLINE,
+                                   CAREER_CODE,
+                                   EDU_CODE,
+                                   BOOK_COUNT,
+                                   PICTURE,
+                                   LICENSE,
+                                   GUGUN_CODE,views,SKILLS)
+        VALUES (#{comid}, #{rectitle,jdbcType=VARCHAR}, #{subtitle,jdbcType=VARCHAR}, #{boss,jdbcType=VARCHAR},
+                #{gcontent,jdbcType=VARCHAR}, SYSDATE, #{start_date,jdbcType=DATE}, #{deadline,jdbcType=DATE},
+                #{career_code,jdbcType=INTEGER},
+                #{edu_code,jdbcType=INTEGER},0, #{picture,jdbcType=VARCHAR},
+                #{license,jdbcType=VARCHAR}, #{gugun_code,jdbcType=INTEGER},0,#{skills,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updatePost">
+        UPDATE RECRUIT
+        SET RECTITLE = #{rectitle},
+            SUBTITLE = #{subtitle},
+            GCONTENT = #{gcontent},
+            START_DATE = #{start_date},
+            DEADLINE = #{deadline},
+            CAREER_CODE = #{career_code},
+            EDU_CODE = #{edu_code},
+            LICENSE = #{license},
+            GUGUN_CODE = #{gugun_code},
+            SKILLS = #{skills}
+        WHERE RECNUM=#{recnum}
+    </update>
+
+    <delete id="deletePost">
+        DELETE FROM RECRUIT WHERE RECNUM=#{recnum}
+    </delete>
+</mapper>

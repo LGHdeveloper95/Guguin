@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guguin.csboard.CsBoardMapper">
+
+    <!-- 게시글 목록 조회 (전체 목록) -->
+    <select id="getAllBoardList">
+        SELECT QNUM, QTITLE, USERID, COMID, QDATE
+        FROM CS
+        ORDER BY QNUM DESC
+    </select>
+
+    <!-- 페이징 처리를 위한 게시글 목록 조회 1 
+  <select id="getPagedBoardList" parameterType="map" resultType="com.guguin.csboard.vo.CsBoardVo">
+    SELECT * FROM (
+        SELECT A.*, ROWNUM rnum FROM (
+            SELECT QNUM, QTITLE, USERID, COMID, QDATE
+            FROM CS
+            ORDER BY QNUM DESC
+        ) A
+        WHERE ROWNUM &lt;= #{arg1}
+    )
+    WHERE rnum &gt; #{arg0}
+</select>
+    
+    <select id="getPagedBoardList" parameterType="map" resultType="com.guguin.csboard.vo.CsBoardVo">
+    SELECT * FROM (
+        SELECT A.*, ROW_NUMBER() OVER (ORDER BY QNUM DESC) AS rnum
+        FROM CS A
+    )
+    WHERE rnum BETWEEN #{arg0} + 1 AND #{arg1}
+   </select>
+    -->
+    
+    
+    <select id="getPagedBoardList">
+    
+        SELECT QNUM, QTITLE, USERID, COMID, TO_CHAR(QDATE,'YY-MM-DD HH:MI') QDATE
+            FROM CS
+            ORDER BY QNUM DESC
+            OFFSET #{arg0} ROWS FETCH NEXT #{arg1} ROWS ONLY
+   </select>
+    
+    
+    <!-- 게시글 총 개수 조회 -->
+    <select id="getTotalBoardCount" >
+        SELECT COUNT(*) FROM CS
+    </select>
+
+    <!-- 게시글 상세 조회 -->
+    <select id="getBoardDetail" >
+        SELECT QNUM, QTITLE, QCONTENT, USERID, COMID, QDATE, ANSWER
+        FROM CS
+        WHERE QNUM = #{qnum}
+    </select>
+<!-- 사용자 ID로 게시글 조회 (페이징 적용) -->
+<select id="getBoardListByUserIdPaged" >
+    SELECT QNUM, QTITLE, USERID, TO_CHAR(QDATE,'YYYY-MM-DD') AS QDATE
+    FROM CS
+    WHERE USERID = #{loggedInUser}
+    ORDER BY QNUM DESC
+    OFFSET #{offset} ROWS FETCH NEXT #{recordsPerPage} ROWS ONLY
+</select>
+
+<!-- 기업 ID로 게시글 조회 (페이징 적용) -->
+<select id="getBoardListByComIdPaged" >
+    SELECT QNUM, QTITLE, COMID, TO_CHAR(QDATE,'YYYY-MM-DD') AS QDATE
+    FROM CS
+    WHERE COMID = #{loggedInComId}
+    ORDER BY QNUM DESC
+    OFFSET #{offset} ROWS FETCH NEXT #{recordsPerPage} ROWS ONLY
+</select>
+
+<!-- 사용자 게시글 총 개수 조회 -->
+<select id="getUserBoardCount" >
+    SELECT COUNT(*) FROM CS WHERE USERID = #{userid}
+</select>
+
+<!-- 기업 게시글 총 개수 조회 -->
+<select id="getComBoardCount"  >
+    SELECT COUNT(*) FROM CS WHERE COMID = #{comid}
+</select>
+
+    <!-- 게시글 작성 
+    <insert id="insertBoard" parameterType="com.guguin.csboard.vo.CsBoardVo">
+    INSERT INTO CS (QNUM, QTITLE, QCONTENT, USERID, COMID, QDATE)
+    VALUES (#{qnum}, #{qtitle}, #{qcontent}, #{userid}, #{comid}, SYSDATE)
+    </insert>
+    -->
+    <insert id="insertBoard">
+    INSERT INTO CS (QTITLE, QCONTENT, USERID, COMID, QDATE)
+    VALUES (#{qtitle}, #{qcontent}, 
+            #{userid, jdbcType=VARCHAR}, 
+            #{comid, jdbcType=VARCHAR}, 
+            SYSDATE)
+    </insert>
+    
+    
+  <select id="getLastQnum">
+    SELECT MAX(QNUM) FROM CS
+    </select>
+    
+    <!-- 게시글 수정 -->
+    <update id="updateBoard">
+        UPDATE CS
+        SET QTITLE = #{qtitle}, QCONTENT = #{qcontent}
+        WHERE QNUM = #{qnum}
+    </update>
+    
+    <update id="updateAnswer">
+      UPDATE CS
+       SET ANSWER = #{ answer }
+       WHERE QNUM = #{ qnum }
+    </update>
+</mapper>

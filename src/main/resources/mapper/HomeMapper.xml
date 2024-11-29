@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guguin.HomeMapper">
+
+    <!-- 조회수가 높은 공고를 가져오는 쿼리 -->
+    <select id="getTopViewsRecList">
+        SELECT RECNUM, RECTITLE, BUSINESS_MEMBERS.COMNAME, VIEWS, PICTURE
+        FROM RECRUIT
+        INNER JOIN BUSINESS_MEMBERS ON RECRUIT.COMID = BUSINESS_MEMBERS.COMID
+        ORDER BY VIEWS DESC
+    </select>
+
+</mapper>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guguin.community.CommunityMapper">
+  <select id="getTotalBoardCount">
+    SELECT COUNT(*) FROM COMMUNITY
+  </select>
+  <select id="getList">
+    SELECT * FROM COMMUNITY
+     ORDER BY HIREDATE DESC
+     OFFSET #{arg0} ROWS FETCH NEXT #{arg1} ROWS ONLY
+  </select>
+  <select id="getComm">
+    SELECT * FROM COMMUNITY
+     WHERE CONUM = #{ conum }
+  </select>
+  <select id="getFiles">
+    SELECT *
+     FROM DATA_STORAGE
+     WHERE STORAGE_USER = #{ conum }
+  </select>
+  <update id="upViews">
+    UPDATE COMMUNITY
+     SET VIEWS = (SELECT VIEWS + 1 FROM COMMUNITY WHERE CONUM = #{conum})
+     WHERE CONUM = #{conum}
+  </update>
+  <delete id="delCom">
+    DELETE
+     FROM COMMUNITY
+     WHERE CONUM = #{conum}
+  </delete>
+  <delete id="delFile">
+    DELETE
+     FROM DATA_STORAGE
+     WHERE FINUM = #{finum}
+  </delete>
+  <select id="getComment">
+    SELECT *
+     FROM COMMUNITY_COMMENT
+     WHERE CONUM = #{ conum }
+  </select>
+  <insert id="insertComment">
+    INSERT INTO COMMUNITY_COMMENT(CONUM,
+    <if test="userid != '' and userid != null">
+      USERID,
+    </if>
+    <if test="comid != '' and comid != null">
+    COMID,
+    </if>
+    C_COMMENT)
+    VALUES(
+      #{conum},
+      <if test="userid != '' and userid != null">
+      #{userid},
+    </if>
+    <if test="comid != '' and comid != null">
+      #{comid},
+    </if>
+    #{c_coment}
+    )
+  </insert>
+  <update id="updateComment">
+    UPDATE COMMUNITY_COMMENT
+     SET C_COMMENT = #{ c_comment }
+     WHERE RENUM = #{ renum }
+  </update>
+  <delete id="delComment">
+    DELETE
+     FROM COMMUNITY_COMMENT
+     WHERE RENUM = #{ renum }
+  </delete>
+</mapper>

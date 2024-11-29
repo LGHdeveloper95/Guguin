@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guguin.com.info.mapper.InfoMapper">
+    <select id="getInfoList">
+        SELECT *
+        FROM COMPANY_INFO
+        ORDER BY REG_DATE
+        OFFSET #{param1} ROWS FETCH NEXT #{param2} ROWS ONLY
+    </select>
+
+    <select id="getInfo">
+        SELECT *
+        FROM COMPANY_INFO
+        WHERE COMID = #{comid}
+    </select>
+
+    <select id="getStarList">
+        SELECT *
+        FROM STARPOINT
+        WHERE COMID = #{comid}
+    </select>
+    <select id="checkBookmark">
+        SELECT COUNT(*)
+        FROM BOOKMARK
+        WHERE COMID = #{param1}
+          AND USERID = #{param2}
+    </select>
+    <insert id="insertBookmark">
+        INSERT INTO BOOKMARK(COMID, USERID, BOOKMARKED_AT)
+        VALUES (#{param1}, #{param2}, SYSDATE)
+    </insert>
+    <delete id="deleteBookmark">
+        DELETE
+        FROM BOOKMARK
+        WHERE COMID = #{param1}
+          AND USERID = #{param2}
+    </delete>
+    <insert id="insertInfo">
+        INSERT INTO COMPANY_INFO
+        VALUES (#{comid}, #{content}, #{history}, #{people_num}, #{link}, SYSDATE, #{comname},'/img/comimg9.png')
+    </insert>
+    <update id="updateInfo">
+        UPDATE COMPANY_INFO
+        SET CONTENT=#{content},
+            HISTORY=#{history},
+            PEOPLE_NUM=#{people_num},
+            LINK=#{link},
+            COMNAME=#{comname}
+        WHERE COMID = #{comid}
+    </update>
+    <select id="getReviewed">
+        SELECT COUNT(*)
+        FROM STARPOINT
+        WHERE USERID = #{param1}
+          AND COMID = #{param2}
+    </select>
+    <insert id="insertStarPoint">
+        INSERT INTO STARPOINT
+        VALUES (joinners_seq.nextVal, #{userid}, #{comid},
+                #{welfare_val}, #{balance_val}, #{culture_val}, #{promotion_val}, #{manager_val}, #{commented})
+    </insert>
+</mapper>
+
+
+
+
+

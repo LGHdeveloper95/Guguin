@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.guguin.join.ComjoinMapper">
+
+<insert id="insertCompany">
+    INSERT INTO BUSINESS_MEMBERS (
+        COMID,
+        COMPW,
+        COMNAME,
+        BOSS,
+        CPHONE,
+        CADDR,
+        BOSSEMAIL,
+        POST_CODE,
+        CADDR2
+    ) VALUES (
+        #{comid},
+        #{compw},
+        #{comname},
+        #{boss},
+        #{cphone},
+        #{caddr},
+        #{bossemail},
+        #{post_code},
+        #{caddr2}
+    )
+</insert>
+<select id="checkIdDuplicate" resultType="boolean">
+    SELECT COUNT(*) FROM BUSINESS_MEMBERS WHERE COMID = #{comid}
+</select>
+
+
+
+</mapper>

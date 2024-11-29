@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.guguin.join.UserjoinMapper">
+
+<insert id="insertUser">
+INSERT INTO PERSONAL_MEMBERS (
+    USERID
+  , USERPW
+  , USERNAME
+  , GENDER
+  , BIRTH
+  , UPHONE
+  , UADDR
+  , EMAIL
+  , POST_CODE
+  , UADDR2
+ ) VALUES (
+    #{userid}
+  , #{userpw}
+  , #{username}
+  , #{gender}
+  , #{birth}
+  , #{uphone}
+  , #{uaddr}
+  , #{email}
+  , #{post_code}
+  , #{uaddr2}
+  )
+
+</insert>
+<select id="checkUserIdDuplicate" resultType="boolean">
+SELECT COUNT(*) FROM PERSONAL_MEMBERS WHERE USERID = #{userid}
+</select>
+
+
+
+</mapper>

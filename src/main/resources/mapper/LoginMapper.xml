@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guguin.login.mapper.LoginMapper">
+
+<select id="getUser">
+    SELECT USERID,USERPW,USERNAME
+    FROM PERSONAL_MEMBERS
+    WHERE USERID=#{userid} AND USERPW=#{userpw}
+</select>
+
+    <select id="getCom">
+        SELECT COMID,COMPW,COMNAME
+        FROM BUSINESS_MEMBERS
+        WHERE COMID=#{comid} AND COMPW=#{compw}
+    </select>
+
+    <select id="getUserId">
+        SELECT USERID
+        FROM PERSONAL_MEMBERS
+        WHERE USERNAME=#{username} AND UPHONE=#{uphone}
+    </select>
+    <select id="getUserPw">
+        SELECT USERPW
+        FROM PERSONAL_MEMBERS
+        WHERE USERID=#{userid} AND USERNAME=#{username} AND UPHONE=#{uphone}
+    </select>
+    <select id="getComId">
+        SELECT COMID
+        FROM BUSINESS_MEMBERS
+        WHERE COMNUM=#{comnum} AND CPHONE=#{cphone}
+    </select>
+    <select id="getComPw">
+        SELECT COMPW
+        FROM BUSINESS_MEMBERS
+        WHERE COMID=#{comid} AND COMNUM=#{comnum} AND CPHONE=#{cphone}
+    </select>
+</mapper>

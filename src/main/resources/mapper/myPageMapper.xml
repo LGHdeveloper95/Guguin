@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guguin.com.mypage.mapper.MyPageMapper">
+
+<select id="getRecList">
+SELECT RECNUM, R.RECTITLE ,TO_CHAR(REG_DATE, 'YYYY-MM-DD') REG_DATE
+FROM RECRUIT R 
+LEFT JOIN BUSINESS_MEMBERS B
+ON R.COMID = B.COMID 
+WHERE B.COMID = #{comid}
+</select>
+
+<select id="getCom">
+SELECT *
+FROM BUSINESS_MEMBERS
+WHERE COMID = #{comid}
+</select>
+
+
+<select id="getScrapList">
+    SELECT 
+    P.RESNUM, 
+    P.RESTITLE, 
+    P.USERNAME, 
+    NVL(TO_CHAR(S.SCRAP_AT, 'YYYY-MM-DD'), '') AS SCRAP_AT
+FROM 
+    PERSONAL_RESUME P
+JOIN 
+    SCRAP S 
+ON 
+    P.RESNUM = S.RESNUM
+WHERE 
+    S.COMID = #{comid}
+</select>
+
+<delete id="deleteScraps" parameterType="list">
+    DELETE FROM SCRAP 
+    WHERE RESNUM IN 
+    <foreach item="resnum" index="index" collection="list" open="(" separator="," close=")">
+        #{resnum}
+    </foreach>
+</delete>
+
+<select id="getApplyList">
+SELECT SENDNUM, TO_CHAR(REG_DATE, 'YYYY-MM-DD') REG_DATE, RESTITLE, USERNAME, PASS_CODE
+FROM APPLIED_RESUME
+WHERE COMID = #{comid}
+</select>
+
+<select id="getPassList">
+SELECT SENDNUM, TO_CHAR(A.REG_DATE, 'YYYY-MM-DD') REG_DATE, RESTITLE, USERNAME, PASS_CODE
+FROM APPLIED_RESUME A
+LEFT JOIN RECRUIT R
+ON A.RECNUM = R.RECNUM
+WHERE A.CAREER_CODE >= R.CAREER_CODE
+AND R.COMID = #{comid}
+</select>
+
+</mapper>

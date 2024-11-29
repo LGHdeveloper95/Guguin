@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guguin.user.recruit.RecruitMapper">
+
+    <!-- 전체 공고 가져오기 (최신순) -->
+    <select id="getAllRecruits" >
+        SELECT RECNUM, RECTITLE, COMNAME, PICTURE
+        FROM RECRUIT
+        ORDER BY REG_DATE DESC
+    </select>
+
+    <!-- 직종 대분류 데이터 가져오기 -->
+    <select id="getSkillCategories" >
+        SELECT SCATE_CODE, SCATE
+        FROM SKILL_CATEGORY_LIST
+    </select>
+
+    <!-- 직종 대분류에 따른 소분류 가져오기 -->
+    <select id="getSkillList" >
+        SELECT SKILL_CODE, SKILL, SCATE_CODE
+        FROM SKILL_LIST
+        WHERE SCATE_CODE = #{scate_code}
+    </select>
+
+    <!-- Sido 리스트 가져오기 -->
+    <select id="getSidoList" >
+        SELECT SIDO_CODE, SIDO
+        FROM SIDO_LIST
+    </select>
+
+    <!-- Sido에 따른 Gugun 리스트 가져오기 -->
+    <select id="getGugunList">
+        SELECT GUGUN_CODE, GUGUN, SIDO_CODE
+        FROM GUGUN_LIST
+        WHERE SIDO_CODE = #{sido_code}
+    </select>
+
+    <!-- 학력 리스트 가져오기 -->
+    <select id="getEduList" >
+        SELECT EDU_CODE, EDU_NAME
+        FROM EDU_LIST
+    </select>
+
+    <!-- 경력 리스트 가져오기 -->
+    <select id="getCareerList" >
+        SELECT CAREER_CODE, CAREER_NAME
+        FROM CAREER
+    </select>
+
+    <!-- 선택된 필터로 공고 검색 -->
+    <select id="getRecruitsByFilters" >
+        SELECT RECNUM, RECTITLE, COMNAME, PICTURE
+        FROM RECRUIT
+        WHERE 1=1
+            <if test="skillCodes != null and skillCodes.size() > 0">
+                AND (
+                    <foreach item="skillCode" collection="skillCodes" open="" separator=" OR " close="">
+                        SKILLS LIKE '%' || #{skillCode} || '%'
+                    </foreach>
+                )
+            </if>
+            <if test="gugunCodes != null and gugunCodes.size() > 0">
+                AND (
+                    <foreach item="gugunCode" collection="gugunCodes" open="" separator=" OR " close="">
+                        GUGUN_CODE = #{gugunCode}
+                    </foreach>
+                )
+            </if>
+            <if test="eduCode != null and eduCode != ''">
+                AND EDU_CODE = #{eduCode}
+            </if>
+            <if test="careerCode != null and careerCode != ''">
+                AND CAREER_CODE = #{careerCode}
+            </if>
+            <if test="startDate != null and endDate != null and startDate != '' and endDate != ''">
+                AND START_DATE BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD')
+            </if>
+        ORDER BY REG_DATE DESC
+    </select>
+
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guguin.com.gusik.GusikMapper">
+
+ <!-- Sido list -->
+     <select id="getResList">
+        SELECT * FROM PERSONAL_RESUME
+    </select>
+    <select id="getSidoList">
+        SELECT sido_code, sido FROM SIDO_LIST
+    </select>
+    <select id="getGugunList">
+        SELECT gugun_code, gugun, sido_code FROM GUGUN_LIST
+    </select>
+   
+
+</mapper>

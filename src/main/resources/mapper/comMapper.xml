@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guguin.com.mapper.ComMapper">
+
+    <select id = "getCareerList">
+        SELECT * FROM CAREER
+    </select>
+
+    <select id = "getEduList">
+        SELECT * FROM  EDU_LIST
+    </select>
+
+    <select id = "getToday">
+        SELECT TO_CHAR(SYSDATE,'YYYY-MM-DD') FROM DUAL
+    </select>
+
+    <select id = "getCom">
+        SELECT * FROM BUSINESS_MEMBERS WHERE COMID=#{comid}
+    </select>
+<select id = "getGugunList">
+        SELECT * FROM GUGUN_LIST
+    </select>
+<select id = "getSidoList">
+        SELECT * FROM SIDO_LIST
+    </select>
+<select id = "getSkillCateList">
+        SELECT * FROM SKILL_CATEGORY_LIST
+    </select>
+<select id = "getSkillList">
+        SELECT * FROM SKILL_LIST
+</select>
+
+    <select id = "getSkillListByCateCode">
+        SELECT * FROM SKILL_LIST WHERE SCATE_CODE=#{scate_code}
+    </select>
+
+    <select id = "getSkillListBySidoCode">
+        SELECT * FROM GUGUN_LIST WHERE SIDO_CODE=#{sido_code}
+    </select>
+
+    <select id="getEdu">
+        SELECT * FROM EDU_LIST WHERE EDU_CODE=#{param1}
+    </select>
+  <select id="getCareer">
+        SELECT * FROM CAREER WHERE CAREER_CODE=#{param1}
+    </select>
+  <select id="getRegion">
+      SELECT SIDO,GUGUN FROM (SELECT * FROM GUGUN_LIST WHERE GUGUN_CODE=#{param1}) T,SIDO_LIST S WHERE S.SIDO_CODE =T.SIDO_CODE
+    </select>
+
+    <select id="getSkillName">
+        SELECT SKILL FROM SKILL_LIST WHERE SKILL_CODE=#{skill}
+    </select>
+    <select id="getStar">
+        SELECT * FROM STARPOINT WHERE COMID=#{comid}
+    </select>
+</mapper>

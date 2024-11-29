@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guguin.note.NoteMapper">
+    <select id="getNoteList">
+        SELECT *
+        FROM NOTE
+        WHERE RECEIVE_ID = #{param1}
+          AND RECEIVE_TYPE = #{param2}
+        ORDER BY REG_DATE DESC
+    </select>
+    <select id="getSendNoteList">
+        SELECT *
+        FROM NOTE
+        WHERE SEND_ID = #{param1}
+          AND SEND_TYPE = #{param2}
+        ORDER BY REG_DATE DESC
+    </select>
+    <select id="getNote">
+        SELECT *
+        FROM NOTE
+        WHERE NOTE_NUM = #{note_num}
+    </select>
+    <select id="checkUserReceiveId">
+        SELECT COUNT(*)
+        FROM PERSONAL_MEMBERS
+        WHERE USERID = #{param1}
+    </select>
+    <select id="checkComReceiveId">
+        SELECT COUNT(*)
+        FROM BUSINESS_MEMBERS
+        WHERE COMID = #{param1}
+    </select>
+    <insert id="insertNote">
+        INSERT INTO NOTE(NOTE_TITLE, NOTE_CONTENT, SEND_ID, RECEIVE_ID, SEND_TYPE, RECEIVE_TYPE)
+        VALUES (#{note_title}, #{note_content}, #{send_id}, #{receive_id}, #{send_type}, #{receive_type})
+    </insert>
+    <delete id="deleteNote">
+        DELETE
+        FROM NOTE
+        WHERE NOTE_NUM = #{note_num}
+    </delete>
+    <insert id="sendLicenseNote">
+        INSERT INTO NOTE(NOTE_TITLE, NOTE_CONTENT, SEND_ID, RECEIVE_ID, SEND_TYPE, RECEIVE_TYPE)
+        VALUES (#{note_title}, #{note_content}, #{send_id}, #{receive_id}, #{send_type}, #{receive_type})
+    </insert>
+    <update id="updateViewed">
+        UPDATE NOTE SET VIEWED=NULL WHERE NOTE_NUM=#{note_num}
+    </update>
+</mapper>
+
+
+
+
+

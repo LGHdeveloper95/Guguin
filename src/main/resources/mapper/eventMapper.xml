@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.guguin.event.EventMapper">
+<select id="getEventList">
+   SELECT * FROM EVENT_NOTIFICATION WHERE USERID=#{id}
+</select>
+   <select id="getUserNoteCount">
+      SELECT COUNT(VIEWED) FROM NOTE WHERE RECEIVE_ID=#{id} AND RECEIVE_TYPE='USER'
+   </select>
+   <select id="getComNoteCount">
+      SELECT COUNT(VIEWED) FROM NOTE WHERE RECEIVE_ID=#{id} AND RECEIVE_TYPE='COM'
+   </select>
+   <update id="updateViewed">
+      UPDATE EVENT_NOTIFICATION SET VIEWED=NULL WHERE ALNUM=#{alnum}
+   </update>
+   <delete id="deleteEvent">
+      DELETE EVENT_NOTIFICATION WHERE ALNUM=#{alnum}
+   </delete>
+</mapper>
