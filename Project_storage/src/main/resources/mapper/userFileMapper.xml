@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guguin.user.mapper.UserFileMapper">
+
+    <insert id="insertResume" parameterType="map">
+        INSERT INTO PERSONAL_RESUME
+        (RESTITLE, USERID, USERNAME, EDU_CODE, CAREER_CODE, BACKGROUND
+        , MOTIVATION, PERSONALITY, GUGUN_CODE, GENDER
+        <if test="picture != null and picture != ''">
+            , PICTURE
+        </if>
+        <if test="edu_content != null and edu_content != ''">
+            , EDU_CONTENT
+        </if>
+        <if test="career_content != null and career_content != ''">
+            , CAREER_CONTENT
+        </if>
+        <if test="skills != null and skills != ''">
+            , SKILLS
+        </if>
+        <if test="license != null and license != ''">
+            , LICENSE
+        </if>
+        )
+        VALUES(
+        #{ restitle }, #{ userid }, #{ username }, #{  edu_code }, #{ career_code }
+        , #{ background }, #{ motivation }, #{ personality }, #{ gugun_code }, #{ gender }
+        <if test="picture != null and picture != ''">
+            , #{ picture }
+        </if>
+        <if test="edu_content != null and edu_content != ''">
+            , #{ edu_content }
+        </if>
+        <if test="career_content != null and career_content != ''">
+            , #{ career_content }
+        </if>
+        <if test="skills != null and skills != ''">
+            , #{ skills }
+        </if>
+        <if test="license != null and license != ''">
+            , #{ license }
+        </if>
+        )
+        <selectKey keyProperty="resnum" resultType="java.lang.String" order="AFTER">
+        		SELECT TO_CHAR( 'RS' || LPAD( RESNUM_SEQ.currval, 20, '0'))  FROM dual
+        </selectKey>
+    </insert>
+    <insert id="insertFile">
+        INSERT INTO DATA_STORAGE(STORAGE_USER, URL)
+         VALUES (#{param1}, #{param2})
+    </insert>
+    <select id="getUrl">
+        SELECT URL
+        FROM DATA_STORAGE
+        WHERE FINUM = #{param1}
+    </select>
+    <select id="getFileIdList">
+        SELECT FINUM
+        FROM DATA_STORAGE
+        WHERE STORAGE_USER = #{param1}
+    </select>
+
+    <select id="getFilePath">
+        SELECT *
+         FROM DATA_STORAGE
+         WHERE STORAGE_USER = #{resnum}
+    </select>
+
+    <delete id="delFile">
+        DELETE
+        FROM DATA_STORAGE
+        WHERE STORAGE_USER = #{ resnum }
+    </delete>
+
+    <update id="updateResume">
+        UPDATE PERSONAL_RESUME
+          SET
+            RESTITLE = #{restitle},
+            USERID = #{userid},
+            USERNAME = #{username},
+            EDU_CODE = #{edu_code},
+            CAREER_CODE = #{career_code},
+            BACKGROUND = #{background},
+            MOTIVATION = #{motivation},
+            PERSONALITY = #{personality},
+            GUGUN_CODE = #{gugun_code},
+            GENDER = #{gender}
+            <if test="picture != null and picture != ''">
+              , PICTURE = #{picture}
+            </if>
+            <if test="edu_content != null and edu_content != ''">
+              , EDU_CONTENT = #{edu_content}
+            </if>
+            <if test="career_content != null and career_content != ''">
+              , CAREER_CONTENT = #{career_content}
+            </if>
+            <if test="skills != null and skills != ''">
+              , SKILLS = #{skills}
+            </if>
+            <if test="license != null and license != ''">
+              , LICENSE = #{license}
+            </if>
+          WHERE RESNUM = #{resnum}
+    </update>
+</mapper>

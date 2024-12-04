@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guguin.cummunity.CommFileMapper">
+    <select id="getConum">
+       SELECT CONUM
+        FROM
+        (SELECT CONUM
+         FROM COMMUNITY
+         WHERE
+             <if test="userid != null and userid != ''">USERID = #{userid}</if>
+             <if test="comid != null and comid != ''">COMID = #{comid}</if>
+         ORDER BY HIREDATE DESC)
+       WHERE ROWNUM =1
+    </select>
+  <insert id="insertCommunity">
+      INSERT INTO COMMUNITY(NOT_TITLE, NOT_CONTENT,
+      <if test="userid != null and userid != ''">USERID</if>
+      <if test="comid != null and comid != ''">COMID</if>
+      )
+      VALUES (#{not_title}, #{not_content},
+            <if test="userid != null and userid != ''">#{userid}</if>
+            <if test="comid != null and comid != ''">#{comid}</if>
+              )
+  </insert>
+    <update id="updateCommunity">
+        UPDATE COMMUNITY SET NOT_TITLE=#{not_title},NOT_CONTENT=#{not_content} WHERE CONUM=#{conum}
+    </update>
+
+    <select id="getFileUrl">
+        SELECT URL
+         FROM DATA_STORAGE
+         WHERE FINUM = #{ finum }
+    </select>
+</mapper>
